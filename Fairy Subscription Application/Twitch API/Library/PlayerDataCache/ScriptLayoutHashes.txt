@@ -1,6 +1,6 @@
 WindowsStandalone
 PlayerPath?
-D:/Users/marc/Desktop/Coding Projects/Unity Tutorial Projects/Twitch/Testing/Twitch API/Twitch API.exe
+D:/Users/marc/Desktop/Coding Projects/Unity Tutorial Projects/Twitch/Fairy Subscription Application/Twitch API/Twitch API.exe
 SceneListBegin?
 Assets/Scenes/SampleScene.unity
 SceneListEnd?

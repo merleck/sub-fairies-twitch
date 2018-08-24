@@ -638,6 +638,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\MyWindow.cs" />
     <Compile Include="Assets\Scripts\AI\Agent.cs" />
     <Compile Include="Assets\Scripts\AI\AgentBehaviour.cs" />
     <Compile Include="Assets\Scripts\AI\Align.cs" />
@@ -650,6 +651,7 @@
     <Compile Include="Assets\Scripts\Utility\TransparentWindow.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\New Additive.shader" />
     <None Include="Assets\Standard Assets\ParticleSystems\ParticleSystemsGuidelines.txt" />
     <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />
     <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAddSoft.shader" />
