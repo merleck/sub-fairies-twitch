@@ -105,8 +105,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4619935922744674}
-  - component: {fileID: 114232426172717360}
   - component: {fileID: 114704204600815016}
+  - component: {fileID: 114176903272771842}
+  - component: {fileID: 114008752085905674}
   m_Layer: 0
   m_Name: Fairy Tier 1
   m_TagString: Untagged
@@ -201,6 +202,44 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114008752085905674
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1946328790317350}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33ae8df1021a27749b83e832e3129588, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1267769490514672, guid: fe1d3903076be634e81a4a4c44b4b86f, type: 2}
+  targetRadius: 0.2
+  slowRadius: 3
+  timeToTarget: 0.1
+  calledTime: 2
+--- !u!114 &114176903272771842
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1946328790317350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1a38f1a80c284147845d06e9af13eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  waypoints: []
+  curWaypoint: 0
+  targetRadius: 1
+  slowRadius: 3
+  timeToTarget: 0.1
+  wanderAmount: 0.7
+  wanderTime: 180
+  offset: 0.3
+  radius: 3
+  rate: 180
 --- !u!114 &114222658640980886
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -222,21 +261,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 200
---- !u!114 &114232426172717360
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1946328790317350}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13dbbbb06439fa2469fa82411d8ae492, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  offset: 0.1
-  radius: 3
-  rate: 180
 --- !u!114 &114528741022619406
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -265,7 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+  m_Color: {r: 0.9150943, g: 0.9107778, b: 0.9107778, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -273,12 +297,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: debe1da8cf9502a438e3760874f62e2c, type: 3}
     m_FontSize: 10
     m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 1
-    m_MaxSize: 10
+    m_MaxSize: 20
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 0
@@ -303,6 +327,7 @@ MonoBehaviour:
   maxAngularAccel: 90
   orientation: 0
   rotation: 0
+  called: 0
   velocity: {x: 0, y: 0}
 --- !u!198 &198134103148881992
 ParticleSystem:
@@ -1192,21 +1217,21 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.6351347
+          value: 0.67
           inSlope: 2
-          outSlope: 2
-          tangentMode: 0
-          weightedMode: 0
+          outSlope: 1.0052028
+          tangentMode: 1
+          weightedMode: 3
           inWeight: 0
-          outWeight: 0
+          outWeight: 0.33540374
         - serializedVersion: 3
-          time: 0.5051432
-          value: 0.9054049
-          inSlope: 1.317075
-          outSlope: 1.317075
-          tangentMode: 0
+          time: 0.5
+          value: 0.9
+          inSlope: 0.47365206
+          outSlope: 1.0341799
+          tangentMode: 1
           weightedMode: 0
-          inWeight: 0.08292913
+          inWeight: 0.2505176
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 0
@@ -18686,7 +18711,7 @@ RectTransform:
   m_GameObject: {fileID: 1577499971229578}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
+  m_LocalScale: {x: 0.06, y: 0.06, z: 0.06}
   m_Children: []
   m_Father: {fileID: 224506687635570006}
   m_RootOrder: 0

@@ -15,6 +15,8 @@ public class TwitchClient : MonoBehaviour
     public GameObject fairyStreamer;
     public GameObject fairyMod;
 
+    Dictionary<string, GameObject> fairyMap;
+
     public Color streamerColor;
 
     private string channel_name = "merleck";
@@ -23,7 +25,7 @@ public class TwitchClient : MonoBehaviour
     { 
         //run this script always while game is running
         Application.runInBackground = true;
-       
+        fairyMap = new Dictionary<string, GameObject>();
         //set up bot and tell it the channel to join
         ConnectionCredentials credentials = new ConnectionCredentials("botmerleck", Secrets.bot_access_token);
         client = new Client();
@@ -49,7 +51,6 @@ public class TwitchClient : MonoBehaviour
     private void MyMessageReceivedFunction(object sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)
     {
         string fairyCommand = "!fairy ";
-
         if (e.ChatMessage.IsBroadcaster && e.ChatMessage.Message.StartsWith(fairyCommand))
         {
             Debug.Log("spawn fairy broadcaster");
@@ -96,200 +97,284 @@ public class TwitchClient : MonoBehaviour
             default:
                 break;
         }
-        
-        switch (sublength)
+        if(!fairyMap.ContainsKey(name))
         {
-            //first 3 months tier 1
-            case 0:
-            case 1:
-            case 2:
-                {
-                    GameObject temp = Instantiate(fairy1, new Vector3(0, 5, 0), Quaternion.identity, null);
-                    ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
-                    Text pName = temp.GetComponentInChildren<Text>();
-                    pName.text = name;
-                    foreach (ParticleSystem p in psystems)
+            switch (sublength)
+            {
+                //first 3 months tier 1
+                case 0:
+                case 1:
+                case 2:
                     {
-                        var main = p.main;
-                        main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+                        GameObject temp = Instantiate(fairy1, new Vector3(0, 5, 0), Quaternion.identity, null);
 
-                        //If editing the dust particle also change the color over lifetime
-                        if (p.gameObject.name == "Dust")
+                        NextPointState tempState = temp.GetComponent<NextPointState>();
+                        tempState.enabled = false;
+                        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Waypoint"))
                         {
-                            Gradient gradient = new Gradient();
-                            GradientColorKey[] gck = new GradientColorKey[2];
-                            GradientAlphaKey[] gak = new GradientAlphaKey[2];
-
-                            gck[0].color = vecColour;
-                            gck[0].time = 0.0f;
-                            gck[1].color = vecColour;
-                            gck[1].time = 1.0f;
-
-                            gak[0].alpha = 1.0f;
-                            gak[0].time = 0.0f;
-                            gak[1].alpha = 0.0f;
-                            gak[1].time = 1.0f;
-
-                            gradient.SetKeys(gck, gak);
-
-                            var particleGradient = p.colorOverLifetime;
-                            particleGradient.color = gradient;
+                            tempState.waypoints.Add(g);
                         }
-                    }
-                }
-                break;
+                        tempState.enabled = true;
 
-            //months 3-6 tier 2
-            case 3:
-            case 4:
-            case 5:
-                {
-                    GameObject temp = Instantiate(fairy2, new Vector3(0, 5, 0), Quaternion.identity, null);
-                    ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
-                    Text pName = temp.GetComponentInChildren<Text>();
-                    pName.text = name;
-                    foreach (ParticleSystem p in psystems)
+                        ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
+                        Text pName = temp.GetComponentInChildren<Text>();
+                        pName.text = name;
+                        foreach (ParticleSystem p in psystems)
+                        {
+                            var main = p.main;
+                            main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+
+                            //If editing the dust particle also change the color over lifetime
+                            if (p.gameObject.name == "Dust")
+                            {
+                                Gradient gradient = new Gradient();
+                                GradientColorKey[] gck = new GradientColorKey[2];
+                                GradientAlphaKey[] gak = new GradientAlphaKey[2];
+
+                                gck[0].color = vecColour;
+                                gck[0].time = 0.0f;
+                                gck[1].color = vecColour;
+                                gck[1].time = 1.0f;
+
+                                gak[0].alpha = 1.0f;
+                                gak[0].time = 0.0f;
+                                gak[1].alpha = 0.0f;
+                                gak[1].time = 1.0f;
+
+                                gradient.SetKeys(gck, gak);
+
+                                var particleGradient = p.colorOverLifetime;
+                                particleGradient.color = gradient;
+                            }
+                        }
+                        fairyMap.Add(name, temp);
+                    }
+                    break;
+
+                //months 3-6 tier 2
+                case 3:
+                case 4:
+                case 5:
                     {
-                        var main = p.main;
-                        main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+                        GameObject temp = Instantiate(fairy2, new Vector3(0, 5, 0), Quaternion.identity, null);
 
-                        //If editing the dust particle also change the color over lifetime
-                        if (p.gameObject.name == "Dust")
+                        NextPointState tempState = temp.GetComponent<NextPointState>();
+                        tempState.enabled = false;
+                        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Waypoint"))
                         {
-                            Gradient gradient = new Gradient();
-                            GradientColorKey[] gck = new GradientColorKey[2];
-                            GradientAlphaKey[] gak = new GradientAlphaKey[2];
-
-                            gck[0].color = vecColour;
-                            gck[0].time = 0.0f;
-                            gck[1].color = vecColour;
-                            gck[1].time = 1.0f;
-
-                            gak[0].alpha = 1.0f;
-                            gak[0].time = 0.0f;
-                            gak[1].alpha = 0.0f;
-                            gak[1].time = 1.0f;
-
-                            gradient.SetKeys(gck, gak);
-
-                            var particleGradient = p.colorOverLifetime;
-                            particleGradient.color = gradient;
+                            tempState.waypoints.Add(g);
                         }
+                        tempState.enabled = true;
+
+                        ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
+                        Text pName = temp.GetComponentInChildren<Text>();
+                        pName.text = name;
+                        foreach (ParticleSystem p in psystems)
+                        {
+                            var main = p.main;
+                            main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+
+                            //If editing the dust particle also change the color over lifetime
+                            if (p.gameObject.name == "Dust")
+                            {
+                                Gradient gradient = new Gradient();
+                                GradientColorKey[] gck = new GradientColorKey[2];
+                                GradientAlphaKey[] gak = new GradientAlphaKey[2];
+
+                                gck[0].color = vecColour;
+                                gck[0].time = 0.0f;
+                                gck[1].color = vecColour;
+                                gck[1].time = 1.0f;
+
+                                gak[0].alpha = 1.0f;
+                                gak[0].time = 0.0f;
+                                gak[1].alpha = 0.0f;
+                                gak[1].time = 1.0f;
+
+                                gradient.SetKeys(gck, gak);
+
+                                var particleGradient = p.colorOverLifetime;
+                                particleGradient.color = gradient;
+                            }
+                        }
+                        fairyMap.Add(name, temp);
                     }
-                }
-                break;
-            //mods
-            case 333:
-                {
-                    GameObject temp = Instantiate(fairyMod, new Vector3(0, 5, 0), Quaternion.identity, null);
-                    ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
-                    Text pName = temp.GetComponentInChildren<Text>();
-                    pName.text = name;
-                    foreach (ParticleSystem p in psystems)
+                    break;
+                //mods
+                case 333:
                     {
-                        var main = p.main;
-                        main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+                        GameObject temp = Instantiate(fairyMod, new Vector3(0, 5, 0), Quaternion.identity, null);
 
-                        //If editing the dust particle also change the color over lifetime
-                        if (p.gameObject.name == "Dust")
+                        NextPointState tempState = temp.GetComponent<NextPointState>();
+                        tempState.enabled = false;
+                        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Waypoint"))
                         {
-                            Gradient gradient = new Gradient();
-                            GradientColorKey[] gck = new GradientColorKey[2];
-                            GradientAlphaKey[] gak = new GradientAlphaKey[2];
-
-                            gck[0].color = vecColour;
-                            gck[0].time = 0.0f;
-                            gck[1].color = vecColour;
-                            gck[1].time = 1.0f;
-
-                            gak[0].alpha = 1.0f;
-                            gak[0].time = 0.0f;
-                            gak[1].alpha = 0.0f;
-                            gak[1].time = 1.0f;
-
-                            gradient.SetKeys(gck, gak);
-
-                            var particleGradient = p.colorOverLifetime;
-                            particleGradient.color = gradient;
+                            tempState.waypoints.Add(g);
                         }
+                        tempState.enabled = true;
+
+                        ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
+                        Text pName = temp.GetComponentInChildren<Text>();
+                        pName.text = name;
+                        foreach (ParticleSystem p in psystems)
+                        {
+                            var main = p.main;
+                            main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+
+                            //If editing the dust particle also change the color over lifetime
+                            if (p.gameObject.name == "Dust")
+                            {
+                                Gradient gradient = new Gradient();
+                                GradientColorKey[] gck = new GradientColorKey[2];
+                                GradientAlphaKey[] gak = new GradientAlphaKey[2];
+
+                                gck[0].color = vecColour;
+                                gck[0].time = 0.0f;
+                                gck[1].color = vecColour;
+                                gck[1].time = 1.0f;
+
+                                gak[0].alpha = 1.0f;
+                                gak[0].time = 0.0f;
+                                gak[1].alpha = 0.0f;
+                                gak[1].time = 1.0f;
+
+                                gradient.SetKeys(gck, gak);
+
+                                var particleGradient = p.colorOverLifetime;
+                                particleGradient.color = gradient;
+                            }
+                        }
+                        fairyMap.Add(name, temp);
                     }
-                }
-                break;
-            //streamer
-            case 666:
-                {
-                    GameObject temp = Instantiate(fairyStreamer, new Vector3(0, 5, 0), Quaternion.identity, null);
-                    ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
-                    Text pName = temp.GetComponentInChildren<Text>();
-                    pName.text = name;
-                    foreach (ParticleSystem p in psystems)
+                    break;
+                //streamer
+                case 666:
                     {
-                        var main = p.main;
-                        main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+                        GameObject temp = Instantiate(fairyStreamer, new Vector3(0, 5, 0), Quaternion.identity, null);
 
-                        //If editing the dust particle also change the color over lifetime
-                        if (p.gameObject.name == "Dust")
+                        NextPointState tempState = temp.GetComponent<NextPointState>();
+                        tempState.enabled = false;
+                        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Waypoint"))
                         {
-                            Gradient gradient = new Gradient();
-                            GradientColorKey[] gck = new GradientColorKey[2];
-                            GradientAlphaKey[] gak = new GradientAlphaKey[2];
-
-                            gck[0].color = vecColour;
-                            gck[0].time = 0.0f;
-                            gck[1].color = vecColour;
-                            gck[1].time = 1.0f;
-
-                            gak[0].alpha = 1.0f;
-                            gak[0].time = 0.0f;
-                            gak[1].alpha = 0.0f;
-                            gak[1].time = 1.0f;
-
-                            gradient.SetKeys(gck, gak);
-
-                            var particleGradient = p.colorOverLifetime;
-                            particleGradient.color = gradient;
+                            tempState.waypoints.Add(g);
                         }
+                        tempState.enabled = true;
+
+                        ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
+                        Text pName = temp.GetComponentInChildren<Text>();
+                        pName.text = name;
+                        foreach (ParticleSystem p in psystems)
+                        {
+                            var main = p.main;
+                            main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+
+                            //If editing the dust particle also change the color over lifetime
+                            if (p.gameObject.name == "Dust")
+                            {
+                                Gradient gradient = new Gradient();
+                                GradientColorKey[] gck = new GradientColorKey[2];
+                                GradientAlphaKey[] gak = new GradientAlphaKey[2];
+
+                                gck[0].color = vecColour;
+                                gck[0].time = 0.0f;
+                                gck[1].color = vecColour;
+                                gck[1].time = 1.0f;
+
+                                gak[0].alpha = 1.0f;
+                                gak[0].time = 0.0f;
+                                gak[1].alpha = 0.0f;
+                                gak[1].time = 1.0f;
+
+                                gradient.SetKeys(gck, gak);
+
+                                var particleGradient = p.colorOverLifetime;
+                                particleGradient.color = gradient;
+                            }
+                        }
+                        fairyMap.Add(name, temp);
                     }
-                }
-                break;
-            //month 6+ tier 3
-            default:
-                {
-                    GameObject temp = Instantiate(fairy3, new Vector3(0, 5, 0), Quaternion.identity, null);
-                    ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
-                    Text pName = temp.GetComponentInChildren<Text>();
-                    pName.text = name;
-                    foreach (ParticleSystem p in psystems)
+                    break;
+                //month 6+ tier 3
+                default:
                     {
-                        var main = p.main;
-                        main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+                        GameObject temp = Instantiate(fairy3, new Vector3(0, 5, 0), Quaternion.identity, null);
 
-                        //If editing the dust particle also change the color over lifetime
-                        if (p.gameObject.name == "Dust")
+                        NextPointState tempState = temp.GetComponent<NextPointState>();
+                        tempState.enabled = false;
+                        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Waypoint"))
                         {
-                            Gradient gradient = new Gradient();
-                            GradientColorKey[] gck = new GradientColorKey[2];
-                            GradientAlphaKey[] gak = new GradientAlphaKey[2];
-
-                            gck[0].color = vecColour;
-                            gck[0].time = 0.0f;
-                            gck[1].color = vecColour;
-                            gck[1].time = 1.0f;
-
-                            gak[0].alpha = 1.0f;
-                            gak[0].time = 0.0f;
-                            gak[1].alpha = 0.0f;
-                            gak[1].time = 1.0f;
-
-                            gradient.SetKeys(gck, gak);
-
-                            var particleGradient = p.colorOverLifetime;
-                            particleGradient.color = gradient;
+                            tempState.waypoints.Add(g);
                         }
+                        tempState.enabled = true;
+
+                        ParticleSystem[] psystems = temp.GetComponentsInChildren<ParticleSystem>();
+                        Text pName = temp.GetComponentInChildren<Text>();
+                        pName.text = name;
+                        foreach (ParticleSystem p in psystems)
+                        {
+                            var main = p.main;
+                            main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
+
+                            //If editing the dust particle also change the color over lifetime
+                            if (p.gameObject.name == "Dust")
+                            {
+                                Gradient gradient = new Gradient();
+                                GradientColorKey[] gck = new GradientColorKey[2];
+                                GradientAlphaKey[] gak = new GradientAlphaKey[2];
+
+                                gck[0].color = vecColour;
+                                gck[0].time = 0.0f;
+                                gck[1].color = vecColour;
+                                gck[1].time = 1.0f;
+
+                                gak[0].alpha = 1.0f;
+                                gak[0].time = 0.0f;
+                                gak[1].alpha = 0.0f;
+                                gak[1].time = 1.0f;
+
+                                gradient.SetKeys(gck, gak);
+
+                                var particleGradient = p.colorOverLifetime;
+                                particleGradient.color = gradient;
+                            }
+                        }
+                        fairyMap.Add(name, temp);
                     }
-                }
-                break;
+                    break;
+            }
         }
+        else
+        {
+            fairyMap[name].GetComponent<Agent>().called = true;
+            ParticleSystem[] psystems = fairyMap[name].GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in psystems)
+            {
+                var main = p.main;
+                main.startColor = new Color(vecColour.x, vecColour.y, vecColour.z, main.startColor.color.a);
 
+                //If editing the dust particle also change the color over lifetime
+                if (p.gameObject.name == "Dust")
+                {
+                    Gradient gradient = new Gradient();
+                    GradientColorKey[] gck = new GradientColorKey[2];
+                    GradientAlphaKey[] gak = new GradientAlphaKey[2];
+
+                    gck[0].color = vecColour;
+                    gck[0].time = 0.0f;
+                    gck[1].color = vecColour;
+                    gck[1].time = 1.0f;
+
+                    gak[0].alpha = 1.0f;
+                    gak[0].time = 0.0f;
+                    gak[1].alpha = 0.0f;
+                    gak[1].time = 1.0f;
+
+                    gradient.SetKeys(gck, gak);
+
+                    var particleGradient = p.colorOverLifetime;
+                    particleGradient.color = gradient;
+                }
+            }
+        }
     }
 }

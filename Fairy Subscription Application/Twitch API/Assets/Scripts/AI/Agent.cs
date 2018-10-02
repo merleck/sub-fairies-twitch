@@ -10,6 +10,7 @@ public class Agent : MonoBehaviour {
     public float maxAngularAccel;
     public float orientation;
     public float rotation;
+    public bool called = false;
 
     public Vector2 velocity;
     protected Steering steering;
